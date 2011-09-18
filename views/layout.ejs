@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/stylesheets/bootstrap-1.2.0.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  
+    <!-- JavaScript -->    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://www.google.com/jsapi"></script>
+    <script>
+      google.load("swfobject", "2.1");
+      google.load("jquery", "1");
+    </script>
+    
+    <script type="text/javascript">
+    <!--
+    	var ytplayer = undefined;
+    	var video_id = "<%= video_id %>";
+    	var video_title = "<%= video_title %>";
+    	var video_count = <%= video_count %>;
+
+    	var isInitial = true;
+    	var playtime = <%= time %> / 1000;
+    	
+		// プレーヤの準備が完了したときのコールバック
+		function onYouTubePlayerReady(playerId) {
+			console.log("onYouTubePlayerReady");
+			if(playerId == "ytplayer1"){	
+				ytplayer = document.getElementById("myytplayer1");  //サンプル動画
+				ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
+				
+				video_id = "<%= video_id %>";
+				console.log("video_id = " + video_id);
+				ytplayer.loadVideoById(video_id);
+			}
+		}
+		// 再生
+		function play() {
+		  if (ytplayer) {
+			 ytplayer.playVideo();
+			 ytplayer.setVolume(50);
+		  }
+		}
+		
+		// ミュート
+		function mute() {
+			if (ytplayer) {
+				if (ytplayer.isMuted()) {
+					ytplayer.unMute();
+					$("#mute").html("Sound OFF");
+				} else {
+					ytplayer.mute();
+					$("#mute").html("Sound ON");
+				}
+			}
+		}
+		
+		// 再生状態が変化したときのコールバック
+		function onytplayerStateChange(newState) {
+			console.log("Player's new state: " + newState);
+			if (newState == 0) {
+				var params = {
+					video_id: video_id,
+					video_count: video_count
+				};
+				$.get("/video", params, function(data){
+					console.log(data);
+					if (ytplayer) {
+						video_id = data.video_id;
+						video_title = data.video_title;
+						video_count = data.video_count;
+						$("#video_title").html(video_title);
+						ytplayer.loadVideoById(video_id);
+					}
+				});
+			} else if (isInitial && newState == 1) {
+				// 起動時のずれ対策。バッファリングが終わったときに同期合わせ
+				var seekTime = Math.floor(playtime);
+				console.log("seek: " + seekTime);
+				ytplayer.seekTo(seekTime);
+				isInitial = false;
+			}
+		}
+		
+		// socket.ioでサーバーと接続
+		var socket = io.connect("/");
+		socket.on('viewer', function(data) {
+			console.log("viewer: " + data);
+			$("#viewer").html(data);
+		});
+		socket.on('playtime', function(data) {
+			if (ytplayer) {
+				var server_time = data/1000;
+				var client_time = ytplayer.getCurrentTime();
+				if ( Math.abs(client_time - server_time) >= 3 ) {
+					console.log("playtime(server): " + server_time);
+					console.log("playtime(client): " + client_time);
+					console.log("Delay detected: " + Math.abs(client_time - server_time) + "[sec]");
+					ytplayer.seekTo(server_time);
+				}
+				playtime = server_time;
+			}
+		});
+	//-->
+	</script>
+    
+  </head>
+  <body>
+    <%- body %>
+  </body>
+</html>

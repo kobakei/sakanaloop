@@ -1,0 +1,88 @@
+<div class="topbar">
+	<div class="topbar-inner">
+		<div class="fill">
+			<div class="container">
+				<h3><a href="#"><%= title %></a></h3>
+				<ul class="nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#about">Contact</a></li>
+				</ul>
+				
+				<ul class="nav secondary-nav">
+					<li><a href="javascript:mute();"><span id="mute">Sound OFF</span></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="hero-unit">
+		<h1><span id="video_title"><%= video_title %></span></h1>
+		<br>
+		<div id="ytapiplayer1">
+			You need Flash player 8+ and JavaScript enabled to view this video.
+		</div>
+		<div class="row">
+			<div class="span2 columns offset6">
+				現在<span id="viewer"><%= viewer %></span>人視聴中
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<section id="about">
+		<div class="page-header">
+			<h3>このサイトについて <small>About <%= title %></small></h3>
+		</div>
+		<div class="row">
+			<div class="span16 columns">
+				<p>
+					ロックバンド・サカナクションのPVを連続再生する非公式サービスです。布教用に作りました。<br>
+					PVはYouTubeのVictorMusicChannel（公式）のものを埋め込みプレーヤーで再生しています。2011/9/10現在再生可能なPVは以下のとおりです。
+					<ul>
+						<li>アイデンティティ</li>
+						<li>アルクアラウンド</li>
+						<li>サンプル</li>
+						<li>セントレイ</li>
+						<li>ネイティブダンサー</li>
+						<li>『バッハの旋律を夜に聴いたせいです。』</li>
+						<li>目が明く藍色</li>
+						<li>ルーキー</li>
+					</ul>
+				</p>
+			</div>
+		</div>
+	<section>
+</div>
+
+<div class="container">
+	<section id="contact">
+		<div class="page-header">
+			<h3>連絡先 <small>Conatct</small></h3>
+		</div>
+		<div class="row">
+			<div class="span16 columns">
+				要望・バグ報告などは<a href="http://twitter.com/#!/ksk_kbys">@ksk_kbys</a>までお願いします。
+			</div>
+		</div>
+		<footer>
+			<p>&copy; <a href="http://twitter.com/#!/ksk_kbys">@ksk_kbys</a> 2011</p>
+		</footer>
+	</section>
+</div>	
+
+
+<!-- Player -->
+<script type="text/javascript">
+<!--
+	var params = { allowScriptAccess: "always" };
+	var atts = { id: "myytplayer1" };
+	//var url = "http://www.youtube.com/v/iqrwN-HhnC8?enablejsapi=1&version=3&playerapiid=ytplayer1&rel=0";
+	var url = "http://www.youtube.com/apiplayer?enablejsapi=1&version=3&playerapiid=ytplayer1&rel=0";
+	swfobject.embedSWF(url, "ytapiplayer1", "800", "480", "8", null, null, params, atts);
+//-->
+</script>
+	
